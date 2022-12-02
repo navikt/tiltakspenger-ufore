@@ -3,6 +3,7 @@ package no.nav.tiltakspenger.ufore
 import mu.KotlinLogging
 import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageContext
+import no.nav.helse.rapids_rivers.MessageProblems
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
 
@@ -24,5 +25,9 @@ class PesysUføreService(rapidsConnection: RapidsConnection,): River.PacketListe
     override fun onPacket(packet: JsonMessage, context: MessageContext) {
         log.info { "Mottok ${packet["@behov"]}" }
         TODO("Not yet implemented")
+    }
+
+    override fun onError(problems: MessageProblems, context: MessageContext) {
+        log.info { "Problems: $problems" }
     }
 }
