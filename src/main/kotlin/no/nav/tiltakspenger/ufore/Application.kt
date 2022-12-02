@@ -19,7 +19,6 @@ fun main() {
 
     RapidApplication.create(Configuration.rapidsAndRivers).apply {
         PesysUføreService(rapidsConnection = this)
-    }.apply {
         register(object : RapidsConnection.StatusListener {
             override fun onStartup(rapidsConnection: RapidsConnection) {
                 log.info { "Starting tiltakspenger-ufore" }
