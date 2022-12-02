@@ -16,10 +16,8 @@ spec:
       enabled: true
   liveness:
     path: /isalive
-    failureThreshold: 1000
   readiness:
     path: /isready
-    failureThreshold: 1000
   prometheus:
     enabled: true
     path: /metrics
