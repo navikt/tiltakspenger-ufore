@@ -12,7 +12,7 @@ class PesysUføreService(rapidsConnection: RapidsConnection,): River.PacketListe
     init {
         River(rapidsConnection).apply {
             validate {
-                it.demandAllOrAny("@behov", listOf("uføre"))
+                it.demandValue("@behov", "uføre")
                 it.forbid("@løsning")
                 it.requireKey("@id", "@behovId")
                 it.requireKey("ident")
@@ -28,6 +28,10 @@ class PesysUføreService(rapidsConnection: RapidsConnection,): River.PacketListe
     }
 
     override fun onError(problems: MessageProblems, context: MessageContext) {
-        log.info { "Problems: $problems" }
+        log.info { "onError: $problems" }
+    }
+
+    override fun onSevere(error: MessageProblems.MessageException, context: MessageContext) {
+        log.info { "onSevere: $error" }
     }
 }
