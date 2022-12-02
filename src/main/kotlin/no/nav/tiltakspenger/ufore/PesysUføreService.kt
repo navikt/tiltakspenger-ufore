@@ -1,11 +1,13 @@
 package no.nav.tiltakspenger.ufore
 
+import mu.KotlinLogging
 import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
 
 class PesysUføreService(rapidsConnection: RapidsConnection,): River.PacketListener {
+    private val log = KotlinLogging.logger {}
     init {
         River(rapidsConnection).apply {
             validate {
@@ -20,6 +22,7 @@ class PesysUføreService(rapidsConnection: RapidsConnection,): River.PacketListe
     }
 
     override fun onPacket(packet: JsonMessage, context: MessageContext) {
+        log.info { "Mottok ${packet["@behov"]}" }
         TODO("Not yet implemented")
     }
 }
