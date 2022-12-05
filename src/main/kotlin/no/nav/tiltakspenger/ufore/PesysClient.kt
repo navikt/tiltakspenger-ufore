@@ -7,9 +7,9 @@ import java.time.LocalDate
 
 class PesysClient(private val config: Configuration.PesysConfig, private val getToken: suspend () -> String) {
     private val client = HttpClient().client
-    suspend fun hentUføre(ident: String, fom: LocalDate, tom: LocalDate, behovId: String): String {
+    suspend fun hentUføre(ident: String, fom: LocalDate, tom: LocalDate, behovId: String): UføreResponse {
         val token = getToken()
-        val response = client.get(urlString = config.pesysUføreUrl) {
+        val response: UføreResponse = client.get(urlString = config.pesysUføreUrl) {
             bearerAuth(token)
             contentType(ContentType.Application.Json)
             accept(ContentType.Application.Json)
@@ -20,11 +20,10 @@ class PesysClient(private val config: Configuration.PesysConfig, private val get
                 parameters.append("tom", tom.toString())
                 parameters.append("uforeTyper", "UFORE")
                 parameters.append("uforeTyper", "UF_M_YRKE")
-//                parameters.append("uforeTyper", "UKJENT")
-//                parameters.append("uforeTyper", "VIRK_IKKE_UFOR")
-//                parameters.append("uforeTyper", "YRKE")
             }
-        }
-        return response.body()
+        }.body()
+        return response
     }
 }
+
+data class UføreResponse(val harUforegrad: Boolean, val datoUfor: LocalDate, val virkDato: LocalDate)
