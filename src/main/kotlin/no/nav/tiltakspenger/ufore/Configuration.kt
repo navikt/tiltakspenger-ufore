@@ -19,29 +19,30 @@ object Configuration {
         "KAFKA_CONSUMER_GROUP_ID" to "tiltakspenger-ufore-v1",
     )
     private val otherDefaultProperties = mapOf(
-        "SERVICEUSER_TPTS_USERNAME" to System.getenv("SERVICEUSER_TPTS_USERNAME"),
-        "SERVICEUSER_TPTS_PASSWORD" to System.getenv("SERVICEUSER_TPTS_PASSWORD"),
+        "AZURE_APP_CLIENT_ID" to System.getenv("AZURE_APP_CLIENT_ID"),
+        "AZURE_APP_CLIENT_SECRET" to System.getenv("AZURE_APP_CLIENT_SECRET"),
+        "AZURE_APP_WELL_KNOWN_URL" to System.getenv("AZURE_APP_WELL_KNOWN_URL"),
     )
     private val defaultProps = ConfigurationMap(rapidsAndRivers + otherDefaultProperties)
     private val localProps = ConfigurationMap(
         mapOf(
-            "STS_URL" to "",
             "application.profile" to Profile.LOCAL.toString(),
-            "PESYS_UFØRE_URL" to ""
+            "PESYS_UFØRE_URL" to "",
+            "PESYS_SCOPE" to "api://localhost:/.default",
         )
     )
     private val devProps = ConfigurationMap(
         mapOf(
-            "STS_URL" to "https://sts-q1.preprod.local/SecurityTokenServiceProvider/",
             "application.profile" to Profile.DEV.toString(),
-            "PESYS_UFØRE_URL" to "http://pensjon-pen-q1.teampensjon/pen/springapi/sak/harUforegrad"
+            "PESYS_UFØRE_URL" to "http://pensjon-pen-q2.teampensjon/pen/springapi/sak/harUforegrad",
+            "PESYS_SCOPE" to "api://dev-fss.teampensjon.pensjon-pen-q2/.default",
         )
     )
     private val prodProps = ConfigurationMap(
         mapOf(
-            "STS_URL" to "https://sts.adeo.no/SecurityTokenServiceProvider/",
             "application.profile" to Profile.PROD.toString(),
-            "PESYS_UFØRE_URL" to "http://pensjon-pen.pensjondeployer/pen/springapi/sak/harUforegrad"
+            "PESYS_UFØRE_URL" to "http://pensjon-pen.pensjondeployer/pen/springapi/sak/harUforegrad",
+            "PESYS_SCOPE" to "api://prod-fss.teampensjon.pensjon-pen/.default",
         )
     )
 
@@ -51,12 +52,15 @@ object Configuration {
         else -> systemProperties() overriding EnvironmentVariables overriding localProps overriding defaultProps
     }
 
-    data class PesysConfig(
-        val pesysUføreUrl: String = config()[Key("PESYS_UFØRE_URL", stringType)],
-        val stsUrl: String = config()[Key("STS_URL", stringType)],
-        val stsUsername: String = config()[Key("SERVICEUSER_TPTS_USERNAME", stringType)],
-        val stsPassword: String = config()[Key("SERVICEUSER_TPTS_PASSWORD", stringType)],
+    data class OauthConfig(
+        val scope: String = config()[Key("PESYS_SCOPE", stringType)],
+        val clientId: String = config()[Key("AZURE_APP_CLIENT_ID", stringType)],
+        val clientSecret: String = config()[Key("AZURE_APP_CLIENT_SECRET", stringType)],
+        val wellknownUrl: String = config()[Key("AZURE_APP_WELL_KNOWN_URL", stringType)]
     )
+
+    @JvmInline
+    value class PesysConfig(val pesysUføreUrl: String = config()[Key("PESYS_UFØRE_URL", stringType)])
 }
 
 enum class Profile {
