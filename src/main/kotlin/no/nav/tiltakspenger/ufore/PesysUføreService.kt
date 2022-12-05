@@ -31,7 +31,7 @@ class PesysUføreService(rapidsConnection: RapidsConnection, private val client:
     override fun onPacket(packet: JsonMessage, context: MessageContext) {
         log.info { "Mottok ${packet["@behov"]}" }
         val behovId = packet["@behovId"].asText()
-        val ident = packet["@ident"].asText()
+        val ident = packet["ident"].asText()
         val fom: LocalDate = packet["fom"].asOptionalLocalDate() ?: LocalDate.MIN
         val tom: LocalDate = packet["tom"].asOptionalLocalDate() ?: LocalDate.MAX
         val response = runBlocking(MDCContext()) { client.hentUføre(ident, fom, tom, behovId) }
