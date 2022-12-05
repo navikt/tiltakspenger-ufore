@@ -20,7 +20,7 @@ class HttpClient(block: CIOEngineConfig.() -> Unit = {}) {
             expectSuccess = true
         }
         install(Logging) {
-            level = LogLevel.BODY
+            level = LogLevel.INFO
         }
         engine(block)
     }
