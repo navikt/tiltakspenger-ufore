@@ -9,7 +9,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.jackson.*
 
-object HttpClient {
+class HttpClient(block: CIOEngineConfig.() -> Unit = {}) {
     val client = HttpClient(CIO) {
         install(ContentNegotiation) {
             jackson {
@@ -22,5 +22,6 @@ object HttpClient {
         install(Logging) {
             level = LogLevel.ALL
         }
+        engine(block)
     }
 }

@@ -3,10 +3,10 @@ package no.nav.tiltakspenger.ufore
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import no.nav.tiltakspenger.ufore.HttpClient.client
 import java.time.LocalDate
 
 class PesysClient(private val config: Configuration.PesysConfig, private val getToken: suspend () -> String) {
+    private val client = HttpClient().client
     suspend fun hentUføre(ident: String, fom: LocalDate, tom: LocalDate, behovId: String): String {
         val token = getToken()
         val response = client.get(urlString = config.pesysUføreUrl) {
