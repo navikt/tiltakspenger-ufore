@@ -18,7 +18,7 @@ class PesysUføreService(rapidsConnection: RapidsConnection, private val client:
     init {
         River(rapidsConnection).apply {
             validate {
-                it.demandValue("@behov", "uføre")
+                it.demandAllOrAny("@behov", listOf("uføre"))
                 it.forbid("@løsning")
                 it.requireKey("@id", "@behovId")
                 it.requireKey("ident")

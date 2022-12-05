@@ -42,7 +42,7 @@ object Configuration {
         mapOf(
             "application.profile" to Profile.PROD.toString(),
             "PESYS_UFØRE_URL" to "http://pensjon-pen.pensjondeployer/pen/springapi/sak/harUforegrad",
-            "PESYS_SCOPE" to "api://prod-fss.teampensjon.pensjon-pen/.default",
+            "PESYS_SCOPE" to "api://prod-fss.pensjondeployer.pensjon-pen/.default",
         )
     )
 
