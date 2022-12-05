@@ -41,8 +41,4 @@ class PesysUføreService(rapidsConnection: RapidsConnection, private val client:
     override fun onError(problems: MessageProblems, context: MessageContext) {
         log.info { "onError: $problems" }
     }
-
-    override fun onSevere(error: MessageProblems.MessageException, context: MessageContext) {
-        log.info { "onSevere: $error" }
-    }
 }

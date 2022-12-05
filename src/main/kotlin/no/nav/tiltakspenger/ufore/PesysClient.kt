@@ -19,6 +19,10 @@ class PesysClient(private val config: Configuration.PesysConfig, private val get
                 parameters.append("fom", fom.toString())
                 parameters.append("tom", tom.toString())
                 parameters.append("uforeTyper", "UFORE")
+                parameters.append("uforeTyper", "UF_M_YRKE")
+                parameters.append("uforeTyper", "UKJENT")
+                parameters.append("uforeTyper", "VIRK_IKKE_UFOR")
+                parameters.append("uforeTyper", "YRKE")
             }
         }
         return response.body()
