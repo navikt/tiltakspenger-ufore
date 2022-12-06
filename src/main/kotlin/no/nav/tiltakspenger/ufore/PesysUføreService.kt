@@ -34,7 +34,8 @@ class PesysUføreService(rapidsConnection: RapidsConnection, private val client:
         val ident = packet["ident"].asText()
         val fom: LocalDate = packet["fom"].asOptionalLocalDate() ?: LocalDate.MIN
         val tom: LocalDate = packet["tom"].asOptionalLocalDate() ?: LocalDate.MAX
-        val response = runBlocking(MDCContext()) { client.hentUføre(ident, fom, tom, behovId) }
+        val response: UføreResponse = runBlocking(MDCContext()) { client.hentUføre(ident, fom, tom, behovId) }
+        log.info { "Fikk svar fra Pesys. Sjekk securelog for detaljer" }
         secureLog.info { response }
     }
 
