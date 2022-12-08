@@ -8,7 +8,6 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
-import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import mu.KotlinLogging
 
@@ -24,12 +23,26 @@ class HttpClient(config: CIOEngineConfig.() -> Unit = {}) {
         }
         expectSuccess = true
         HttpResponseValidator {
+            validateResponse { response ->
+                val statusCode = response.status
+                log.info { "Fikk $statusCode fra Pesys" }
+            }
             handleResponseExceptionWithRequest { exception, _ ->
-                val clientException = exception as? ClientRequestException ?: return@handleResponseExceptionWithRequest
-                val exceptionResponse = clientException.response
-                if (exceptionResponse.status == HttpStatusCode.BadRequest) {
-                    log.error { "400 mot pesys: $exceptionResponse" }
-                    // TODO: handle this
+                when (exception) {
+                    is ClientRequestException -> {
+                        val exceptionResponse = exception.response
+                        log.warn { "Fikk client ${exceptionResponse.status} fra Pesys" }
+                    }
+
+                    is ServerResponseException -> {
+                        val exceptionResponse = exception.response
+                        log.warn { "Fikk server ${exceptionResponse.status} fra Pesys" }
+                    }
+
+                    else -> {
+                        log.warn { "Fikk uhåndtert feil fra Pesys: $exception" }
+                        return@handleResponseExceptionWithRequest
+                    }
                 }
             }
         }
