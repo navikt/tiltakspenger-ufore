@@ -26,4 +26,4 @@ class PesysClient(private val config: Configuration.PesysConfig, private val get
     }
 }
 
-data class UføreResponse(val harUforegrad: Boolean, val datoUfor: LocalDate, val virkDato: LocalDate)
+data class UføreResponse(val harUforegrad: Boolean, val datoUfor: LocalDate?, val virkDato: LocalDate?)
