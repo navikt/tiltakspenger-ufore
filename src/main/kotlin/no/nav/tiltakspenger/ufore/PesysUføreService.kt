@@ -10,6 +10,7 @@ import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
 import no.nav.helse.rapids_rivers.asOptionalLocalDate
 import java.time.LocalDate
+import java.time.format.DateTimeParseException
 
 class PesysUføreService(rapidsConnection: RapidsConnection, private val client: PesysClient) : River.PacketListener {
     private val log = KotlinLogging.logger {}
@@ -32,11 +33,15 @@ class PesysUføreService(rapidsConnection: RapidsConnection, private val client:
         log.info { "Mottok ${packet["@behov"]}" }
         val behovId = packet["@behovId"].asText()
         val ident = packet["ident"].asText()
-        val fom: LocalDate = packet["fom"].asOptionalLocalDate() ?: LocalDate.MIN
-        val tom: LocalDate = packet["tom"].asOptionalLocalDate() ?: LocalDate.MAX
-        val response: UføreResponse = runBlocking(MDCContext()) { client.hentUføre(ident, fom, tom, behovId) }
-        log.info { "Fikk svar fra Pesys. Sjekk securelog for detaljer" }
-        secureLog.info { response }
+        try {
+            val fom: LocalDate = packet["fom"].asOptionalLocalDate() ?: LocalDate.MIN
+            val tom: LocalDate = packet["tom"].asOptionalLocalDate() ?: LocalDate.MAX
+            val response: UføreResponse = runBlocking(MDCContext()) { client.hentUføre(ident, fom, tom, behovId) }
+            log.info { "Fikk svar fra Pesys. Sjekk securelog for detaljer" }
+            secureLog.info { response }
+        } catch (e: DateTimeParseException) {
+            log.info { "ignorig $e" }
+        }
     }
 
     override fun onError(problems: MessageProblems, context: MessageContext) {
