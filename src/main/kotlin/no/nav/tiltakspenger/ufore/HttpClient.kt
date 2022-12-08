@@ -9,7 +9,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.jackson.*
 
-class HttpClient(block: CIOEngineConfig.() -> Unit = {}) {
+class HttpClient(config: CIOEngineConfig.() -> Unit = {}) {
     val client = HttpClient(CIO) {
         install(ContentNegotiation) {
             jackson {
@@ -17,11 +17,11 @@ class HttpClient(block: CIOEngineConfig.() -> Unit = {}) {
                 configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 registerModule(JavaTimeModule())
             }
-            expectSuccess = true
         }
+        expectSuccess = true
         install(Logging) {
             level = LogLevel.INFO
         }
-        engine(block)
+        engine(config)
     }
 }
