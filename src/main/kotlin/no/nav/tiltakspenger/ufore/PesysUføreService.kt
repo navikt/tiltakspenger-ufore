@@ -1,5 +1,6 @@
 package no.nav.tiltakspenger.ufore
 
+import io.ktor.client.plugins.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
@@ -28,13 +29,17 @@ class PesysUføreService(rapidsConnection: RapidsConnection, private val client:
 
     override fun onPacket(packet: JsonMessage, context: MessageContext) {
         log.info { "Mottok ${packet["@behov"]}" }
-        val behovId = packet["@behovId"].asText()
-        val ident = packet["ident"].asText()
-        val fom = packet["fom"].asText()
-        val tom = packet["tom"].asText()
-        val response: UføreResponse = runBlocking(MDCContext()) { client.hentUføre(ident, fom, tom, behovId) }
-        log.info { "Fikk svar fra Pesys. Sjekk securelog for detaljer" }
-        secureLog.info { response }
+        try {
+            val behovId = packet["@behovId"].asText()
+            val ident = packet["ident"].asText()
+            val fom = packet["fom"].asText()
+            val tom = packet["tom"].asText()
+            val response: UføreResponse = runBlocking(MDCContext()) { client.hentUføre(ident, fom, tom, behovId) }
+            log.info { "Fikk svar fra Pesys. Sjekk securelog for detaljer" }
+            secureLog.info { response }
+        } catch (e: ClientRequestException) {
+            log.info { "Svelger og går videre: $e" }
+        }
     }
 
     override fun onError(problems: MessageProblems, context: MessageContext) {
