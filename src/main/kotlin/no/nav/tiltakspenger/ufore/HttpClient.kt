@@ -8,10 +8,8 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.jackson.*
-import mu.KotlinLogging
 
 class HttpClient(config: CIOEngineConfig.() -> Unit = {}) {
-    private val log = KotlinLogging.logger {}
     val client = HttpClient(CIO) {
         install(ContentNegotiation) {
             jackson {
