@@ -10,7 +10,10 @@ import no.nav.helse.rapids_rivers.MessageProblems
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
 
-class PesysUføreService(rapidsConnection: RapidsConnection, private val client: PesysClient) : River.PacketListener {
+class PesysUføreService(
+    rapidsConnection: RapidsConnection,
+    private val pesysClient: PesysClient
+) : River.PacketListener {
     private val log = KotlinLogging.logger {}
     private val secureLog = KotlinLogging.logger("tjenestekall")
 
@@ -34,7 +37,7 @@ class PesysUføreService(rapidsConnection: RapidsConnection, private val client:
             val ident = packet["ident"].asText()
             val fom = packet["fom"].asText()
             val tom = packet["tom"].asText()
-            val response: UføreResponse = runBlocking(MDCContext()) { client.hentUføre(ident, fom, tom, behovId) }
+            val response: UføreResponse = runBlocking(MDCContext()) { pesysClient.hentUføre(ident, fom, tom, behovId) }
             log.info { "Fikk svar fra Pesys. Sjekk securelog for detaljer" }
             secureLog.info { response }
         } catch (e: ClientRequestException) {

@@ -1,12 +1,13 @@
 package no.nav.tiltakspenger.ufore
 
+import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import java.time.LocalDate
 
-class PesysClient(private val config: Configuration.PesysConfig, private val getToken: suspend () -> String) {
-    private val client = HttpClient().client
+class PesysClient(private val client: HttpClient, private val getToken: suspend () -> String) {
+    private val config = Configuration.PesysConfig()
     suspend fun hentUføre(ident: String, fom: String, tom: String, behovId: String): UføreResponse {
         val token = getToken()
         val response: UføreResponse = client.get(urlString = config.pesysUføreUrl) {

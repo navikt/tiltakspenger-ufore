@@ -4,13 +4,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.ktor.client.*
+import io.ktor.client.engine.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.jackson.*
 
-class HttpClient(config: CIOEngineConfig.() -> Unit = {}) {
-    val client = HttpClient(CIO) {
+fun httpClient(engine: HttpClientEngine = CIO.create(), config: HttpClientEngineConfig.() -> Unit = {}) =
+    HttpClient(engine) {
         install(ContentNegotiation) {
             jackson {
                 configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
@@ -24,4 +25,3 @@ class HttpClient(config: CIOEngineConfig.() -> Unit = {}) {
         }
         engine(config)
     }
-}
