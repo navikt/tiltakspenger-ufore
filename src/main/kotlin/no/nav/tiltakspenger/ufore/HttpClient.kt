@@ -12,9 +12,8 @@ import io.ktor.serialization.jackson.*
 import mu.KotlinLogging
 
 val LOG = KotlinLogging.logger {}
-fun httpClient(engine: HttpClientEngine = CIO.create(), config: HttpClientEngineConfig.() -> Unit = {}) =
+fun httpClient(engine: HttpClientEngine = CIO.create(), useProxy: Boolean = false) =
     HttpClient(engine) {
-        LOG.info { "Setting up httpclient with config: $config" }
         install(ContentNegotiation) {
             jackson {
                 configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
@@ -26,6 +25,12 @@ fun httpClient(engine: HttpClientEngine = CIO.create(), config: HttpClientEngine
         install(Logging) {
             level = LogLevel.INFO
         }
-        engine(config)
-        LOG.info { "Returning httpclient $this" }
+        if (useProxy) {
+            System.getenv("HTTP_PROXY")?.let {
+                LOG.info("Setter opp proxy mot $it")
+                engine {
+                    proxy = ProxyBuilder.http(it)
+                }
+            }
+        }
     }
