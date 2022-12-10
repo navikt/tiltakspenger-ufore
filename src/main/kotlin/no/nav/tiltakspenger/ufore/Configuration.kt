@@ -22,6 +22,7 @@ object Configuration {
         "AZURE_APP_CLIENT_ID" to System.getenv("AZURE_APP_CLIENT_ID"),
         "AZURE_APP_CLIENT_SECRET" to System.getenv("AZURE_APP_CLIENT_SECRET"),
         "AZURE_APP_WELL_KNOWN_URL" to System.getenv("AZURE_APP_WELL_KNOWN_URL"),
+        "HTTP_PROXY" to System.getenv("HTTP_PROXY")
     )
     private val defaultProps = ConfigurationMap(rapidsAndRivers + otherDefaultProperties)
     private val localProps = ConfigurationMap(
@@ -61,6 +62,8 @@ object Configuration {
 
     @JvmInline
     value class PesysConfig(val pesysUføreUrl: String = config()[Key("PESYS_UFØRE_URL", stringType)])
+
+    fun httpProxy(): String? = config().getOrNull(Key("HTTP_PROXY", stringType))
 }
 
 enum class Profile {
