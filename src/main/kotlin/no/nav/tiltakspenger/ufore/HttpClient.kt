@@ -32,3 +32,9 @@ fun httpClient(engine: HttpClientEngine = CIO.create()) =
             }
         }
     }
+
+/*
+                log.info("Setter opp proxy mot $it")
+                this.proxy = ProxyBuilder.http(it)
+            }
+ */
