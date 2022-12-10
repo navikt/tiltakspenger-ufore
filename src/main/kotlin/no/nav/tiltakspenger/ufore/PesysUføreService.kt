@@ -31,7 +31,7 @@ class PesysUføreService(
     }
 
     override fun onPacket(packet: JsonMessage, context: MessageContext) {
-        log.info { "Mottok $packet" }
+        log.info { "Mottok ${packet.toJson()}" }
         try {
             val behovId = packet["@behovId"].asText()
             val ident = packet["ident"].asText()
