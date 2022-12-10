@@ -9,10 +9,8 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.jackson.*
-import mu.KotlinLogging
 
-val LOG = KotlinLogging.logger {}
-fun httpClient(engine: HttpClientEngine = CIO.create()) =
+fun httpClient(engine: HttpClientEngine = CIO.create(), config: HttpClientEngineConfig.() -> Unit = {}) =
     HttpClient(engine) {
         install(ContentNegotiation) {
             jackson {
@@ -25,16 +23,5 @@ fun httpClient(engine: HttpClientEngine = CIO.create()) =
         install(Logging) {
             level = LogLevel.INFO
         }
-        System.getenv("HTTP_PROXY")?.let {
-            LOG.info("Setter opp proxy mot $it")
-            engine {
-                proxy = ProxyBuilder.http(it)
-            }
-        }
+        engine(config)
     }
-
-/*
-                log.info("Setter opp proxy mot $it")
-                this.proxy = ProxyBuilder.http(it)
-            }
- */
