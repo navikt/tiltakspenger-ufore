@@ -1,13 +1,10 @@
 package no.nav.tiltakspenger.ufore
 
-import io.ktor.client.engine.mock.*
-import io.ktor.http.*
 import io.mockk.coEvery
 import io.mockk.mockk
 import no.nav.helse.rapids_rivers.asLocalDate
 import no.nav.helse.rapids_rivers.testsupport.TestRapid
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -43,8 +40,8 @@ internal class PesysUføreServiceTest {
     fun happy() {
         val testRapid = TestRapid()
         val pesysClient = mockk<PesysClient>()
-        val datoUfor = LocalDate.EPOCH
-        val virkDato = LocalDate.MAX
+        val datoUfor = LocalDate.MIN
+        val virkDato = LocalDate.EPOCH
         coEvery { pesysClient.hentUføre(ident, any(), any(), any()) }.returns(UføreResponse(true, datoUfor, virkDato))
         PesysUføreService(testRapid, pesysClient)
         testRapid.sendTestMessage(behov)
@@ -53,28 +50,6 @@ internal class PesysUføreServiceTest {
             assertEquals(1, size)
             assertTrue(løsning["harUforegrad"].asBoolean())
             assertEquals(virkDato, løsning["virkDato"].asLocalDate())
-        }
-    }
-
-    @Test
-    fun sad() {
-        val testRapid = TestRapid()
-        val mockEngine = MockEngine {
-            respond(
-                content = "personen ble ikke funnet, da sier vi at personen ikke har en uføregrad",
-                status = HttpStatusCode.NotFound,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            )
-        }
-        val client = httpClientTest(mockEngine)
-        val pesysClient = PesysClient(client) { "token" }
-        PesysUføreService(testRapid, pesysClient)
-        testRapid.sendTestMessage(behov)
-        with(testRapid.inspektør) {
-            val løsning = this.message(0)["@løsning"]
-            assertEquals(1, size)
-            assertFalse(løsning["harUforegrad"].asBoolean())
-            assertFalse(løsning.hasNonNull("virkDato"))
         }
     }
 }
