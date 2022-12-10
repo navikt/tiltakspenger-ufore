@@ -1,5 +1,7 @@
 package no.nav.tiltakspenger.ufore
 
+import io.ktor.client.plugins.*
+import io.ktor.http.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
@@ -42,10 +44,18 @@ class PesysUføreService(
                 secureLog.debug { "mottok ident $ident" }
                 val fom = packet["fom"].asText()
                 val tom = packet["tom"].asText()
-                val response: UføreResponse = runBlocking(MDCContext()) {
-                    pesysClient.hentUføre(ident, fom, tom, behovId)
+                val response: UføreResponse = try {
+                    runBlocking(MDCContext()) {
+                        pesysClient.hentUføre(ident, fom, tom, behovId).also {
+                            log.info { "Fikk svar fra Pesys. Sjekk securelog for detaljer" }
+                        }
+                    }
+                } catch (e: ClientRequestException) {
+                    if (e.response.status == HttpStatusCode.NotFound) {
+                        log.info { "Fikk 404 fra Pesys. Sjekk securelog for detaljer" }
+                        UføreResponse(false, null, null)
+                    } else throw (e)
                 }
-                log.info { "Fikk svar fra Pesys. Sjekk securelog for detaljer" }
                 secureLog.info { response }
                 packet["@løsning"] = mapOf(
                     "harUforegrad" to response.harUforegrad,

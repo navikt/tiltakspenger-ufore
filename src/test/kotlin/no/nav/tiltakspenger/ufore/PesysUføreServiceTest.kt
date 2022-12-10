@@ -6,16 +6,13 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import no.nav.helse.rapids_rivers.asLocalDate
 import no.nav.helse.rapids_rivers.testsupport.TestRapid
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
 internal class PesysUføreServiceTest {
-    private val testRapid: TestRapid = TestRapid()
     private val ident = "42"
     private val behov = """
             {
@@ -42,13 +39,9 @@ internal class PesysUføreServiceTest {
             }
         """
 
-    @AfterEach
-    fun reset() {
-        testRapid.reset()
-    }
-
     @Test
     fun happy() {
+        val testRapid = TestRapid()
         val pesysClient = mockk<PesysClient>()
         val datoUfor = LocalDate.EPOCH
         val virkDato = LocalDate.MAX
@@ -65,6 +58,7 @@ internal class PesysUføreServiceTest {
 
     @Test
     fun sad() {
+        val testRapid = TestRapid()
         val mockEngine = MockEngine {
             respond(
                 content = "personen ble ikke funnet, da sier vi at personen ikke har en uføregrad",
@@ -80,7 +74,7 @@ internal class PesysUføreServiceTest {
             val løsning = this.message(0)["@løsning"]
             assertEquals(1, size)
             assertFalse(løsning["harUforegrad"].asBoolean())
-            assertNull(løsning["virkDato"])
+            assertFalse(løsning.hasNonNull("virkDato"))
         }
     }
 }
