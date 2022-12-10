@@ -1,5 +1,6 @@
 package no.nav.tiltakspenger.ufore
 
+import io.ktor.client.engine.*
 import mu.KotlinLogging
 import no.nav.helse.rapids_rivers.RapidApplication
 import no.nav.helse.rapids_rivers.RapidsConnection
@@ -13,7 +14,14 @@ fun main() {
         log.error { "Uncaught exception logget i securelog" }
         securelog.error(e) { e.message }
     }
-    val tokenProvider = AzureTokenProvider(httpClient = httpClient(useProxy = true))
+    val tokenProvider = AzureTokenProvider(
+        httpClient = httpClient {
+            System.getenv("HTTP_PROXY")?.let {
+                log.info("Setter opp proxy mot $it")
+                this.proxy = ProxyBuilder.http(it)
+            }
+        }
+    )
     RapidApplication.create(Configuration.rapidsAndRivers).apply {
         PesysUføreService(rapidsConnection = this, pesysClient = PesysClient(httpClient(), tokenProvider::getToken))
         register(object : RapidsConnection.StatusListener {

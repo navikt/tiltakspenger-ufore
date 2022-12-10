@@ -1,5 +1,6 @@
 package no.nav.tiltakspenger.ufore
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import io.ktor.client.*
 import io.ktor.client.engine.mock.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -24,7 +25,13 @@ internal class PesysClientTest {
                 headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             )
         }
-        val client = httpClient(engine = mockEngine)
+        val client = HttpClient(mockEngine) {
+            install(ContentNegotiation) {
+                jackson {
+                    registerModule(JavaTimeModule())
+                }
+            }
+        }
         val pesysClient = PesysClient(client) { "a token to be used for tests" }
         runTest {
             val response = pesysClient.hentUføre("ident", "fom", "tom", "behovId")
