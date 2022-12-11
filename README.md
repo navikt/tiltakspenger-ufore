@@ -26,7 +26,7 @@ For å bygge artifaktene:
 
 # Tolkning av svar fra Pesys
 
-En utviklers tolkning, men bistand fra jurist.
+En utviklers tolkning, med bistand fra jurist.
 
 Gyldig forespørsel til Pesys i Q2 (fnr settes som en header):
 
@@ -61,7 +61,7 @@ Eksempel på 200-svar fra pesys ved gyldig input:
 `datoUfor` virker ikke være relevant for oss. Det er derimot `virkDato`, virkningstidspunkt. For bruker den dagen penger
 blir utbetalt.
 
-Man kan spørre seg Hvorfor ikke `datoUfor` er relevant og hvordan det kan være forskjell på `datoUfor` og `virkDato`.
+Man kan spørre seg hvorfor ikke `datoUfor` er relevant og hvordan det kan være forskjell på `datoUfor` og `virkDato`.
 Mest sannsynlig går brukeren da på en annen ytelse (f.eks. AAP) mellom 2022-02-01 og 2022-09-01 gitt eksempelsvar over.
 Tiltakspengeforskriften, § 7 Forholdet til andre ytelser, sier
 
