@@ -22,7 +22,7 @@ fun httpClientMedProxy() = httpClientCIO {
     }
 }
 
-fun httpClientTest(engine: HttpClientEngine) = HttpClient(engine).medDefaultConfig()
+fun httpClientGeneric(engine: HttpClientEngine) = HttpClient(engine).medDefaultConfig()
 
 private fun HttpClient.medDefaultConfig() = this.config {
     install(ContentNegotiation) {

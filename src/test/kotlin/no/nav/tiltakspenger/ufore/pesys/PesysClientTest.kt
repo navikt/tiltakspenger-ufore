@@ -1,4 +1,4 @@
-package no.nav.tiltakspenger.ufore
+package no.nav.tiltakspenger.ufore.pesys
 
 import io.ktor.client.*
 import io.ktor.client.engine.mock.*
@@ -8,6 +8,7 @@ import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import no.nav.tiltakspenger.ufore.httpClientGeneric
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNull
@@ -28,7 +29,7 @@ internal class PesysClientTest {
                 headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             )
         }
-        val client = httpClientTest(mockEngine)
+        val client = httpClientGeneric(mockEngine)
         val pesysClient = PesysClient(client) { "a token to be used for tests" }
         runTest {
             val response = pesysClient.hentUføre("ident", "fom", "tom", "behovId")
@@ -48,7 +49,7 @@ internal class PesysClientTest {
                 headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             )
         }
-        val client = httpClientTest(mockEngine)
+        val client = httpClientGeneric(mockEngine)
         val pesysClient = PesysClient(client) { "a token to be used for tests" }
         runTest {
             val response = pesysClient.hentUføre("ident", "fom", "tom", "behovId")
@@ -68,7 +69,7 @@ internal class PesysClientTest {
                 headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             )
         }
-        val client = httpClientTest(mockEngine)
+        val client = httpClientGeneric(mockEngine)
         val pesysClient = PesysClient(client) { "a token to be used for tests" }
         assertThrows(ClientRequestException::class.java) {
             runTest { pesysClient.hentUføre("ident", "fom", "tom", "behovId") }

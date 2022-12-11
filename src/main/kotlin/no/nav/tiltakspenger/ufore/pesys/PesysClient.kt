@@ -1,10 +1,11 @@
-package no.nav.tiltakspenger.ufore
+package no.nav.tiltakspenger.ufore.pesys
 
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import no.nav.tiltakspenger.ufore.Configuration
 import java.time.LocalDate
 
 class PesysClient(private val client: HttpClient, private val getToken: suspend () -> String) {

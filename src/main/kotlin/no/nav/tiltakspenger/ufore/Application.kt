@@ -4,6 +4,7 @@ import mu.KotlinLogging
 import no.nav.helse.rapids_rivers.RapidApplication
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.tiltakspenger.ufore.auth.AzureTokenProvider
+import no.nav.tiltakspenger.ufore.pesys.PesysClient
 
 fun main() {
     System.setProperty("logback.configurationFile", "egenLogback.xml")
