@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-internal class PesysUføreServiceTest {
+internal class UføreServiceTest {
     private val ident = "42"
     private val behov = """
             {
@@ -45,7 +45,7 @@ internal class PesysUføreServiceTest {
         val datoUfor = LocalDate.MIN
         val virkDato = LocalDate.EPOCH
         coEvery { pesysClient.hentUføre(ident, any(), any(), any()) }.returns(UføreResponse(true, datoUfor, virkDato))
-        PesysUføreService(testRapid, pesysClient)
+        UføreService(testRapid, pesysClient)
         testRapid.sendTestMessage(behov)
         with(testRapid.inspektør) {
             val løsning = this.message(0)["@løsning"]

@@ -16,7 +16,7 @@ fun main() {
     }
     val tokenProvider = AzureTokenProvider(httpClientMedProxy())
     RapidApplication.create(Configuration.rapidsAndRivers).apply {
-        PesysUføreService(rapidsConnection = this, pesysClient = PesysClient(httpClientCIO(), tokenProvider::getToken))
+        UføreService(rapidsConnection = this, pesysClient = PesysClient(httpClientCIO(), tokenProvider::getToken))
         register(object : RapidsConnection.StatusListener {
             override fun onStartup(rapidsConnection: RapidsConnection) {
                 log.info { "Starting tiltakspenger-ufore" }

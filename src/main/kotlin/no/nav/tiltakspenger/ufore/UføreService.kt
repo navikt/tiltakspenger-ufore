@@ -11,10 +11,7 @@ import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
 import no.nav.tiltakspenger.ufore.pesys.PesysClient
 
-class PesysUføreService(
-    rapidsConnection: RapidsConnection,
-    private val pesysClient: PesysClient
-) : River.PacketListener {
+class UføreService(rapidsConnection: RapidsConnection, private val pesysClient: PesysClient) : River.PacketListener {
     private val log = KotlinLogging.logger {}
     private val secureLog = KotlinLogging.logger("tjenestekall")
 
