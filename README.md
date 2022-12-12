@@ -3,8 +3,7 @@ tiltakspenger
 
 Innhenter informasjon om uføretrygd for en søker av tiltakspenger.
 
-En del av
-satsningen ["Flere i arbeid – P4"](https://memu.no/artikler/stor-satsing-skal-fornye-navs-utdaterte-it-losninger-og-digitale-verktoy/)
+En del av satsningen ["Flere i arbeid – P4"](https://memu.no/artikler/stor-satsing-skal-fornye-navs-utdaterte-it-losninger-og-digitale-verktoy/)
 
 # Komme i gang
 
@@ -26,12 +25,12 @@ For å bygge artifaktene:
 
 # Tolkning av svar fra Pesys
 
-En utviklers tolkning, med bistand fra jurist.
+En utviklers tolkning, med bistand fra fagkyndig jurist.
 
-Gyldig forespørsel til Pesys i Q2 (fnr settes som en header):
+Gyldig forespørsel til Pesys (fnr settes som en header):
 
 ```
-http://pensjon-pen-q2.teampensjon/pen/springapi/sak/harUforegrad?fom=2022-01-01&tom=2022-12-31&uforeTyper=UFORE&uforeTyper=UF_M_YRKE
+http://<pesysURL>/harUforegrad?fom=2022-01-01&tom=2022-12-31&uforeTyper=UFORE&uforeTyper=UF_M_YRKE
 ```
 
 Pesys svarer
@@ -42,9 +41,9 @@ Pesys svarer
 - 5xx og andre feilkoder. Vi kaster Exception
 
 Det finnes flere `uforeTyper`, men ved å bruke `UFORE` (Uføre) og `UF_M_YRKE` (Uføre m/yrkesskade) vil man treffe de
-periodene med uføregrad som finnes
+periodene med uføregrad som finnes, ifølge Pesys
 
-Eksempel på 200-svar fra pesys ved gyldig input:
+Eksempel på 200-svar fra Pesys ved gyldig input:
 
 ```json
 {
@@ -54,12 +53,11 @@ Eksempel på 200-svar fra pesys ved gyldig input:
 }
 ```
 
-- om man spør om en periode før `datoUfor`, får man `harUforegrad=false`
-- om man spør om en periode der `datoUfor` inngår, får man `harUforegrad=true`
-- om man spør om en periode etter `datoUfor`, får man `harUforegrad=true` (fordi man ikke vet når ufør opphører)
+- om man spør om en periode _før_ `datoUfor`, får man `harUforegrad=false`
+- om man spør om en periode der `datoUfor` _inngår_, får man `harUforegrad=true`
+- om man spør om en periode _etter_ `datoUfor`, får man `harUforegrad=true` (fordi man ikke vet når ufør opphører)
 
-`datoUfor` virker ikke være relevant for oss. Det er derimot `virkDato`, virkningstidspunkt. For bruker den dagen penger
-blir utbetalt.
+`datoUfor` virker ikke være relevant for oss. Det er derimot `virkDato`, virkningstidspunkt. For bruker er dette den dagen penger blir utbetalt.
 
 Man kan spørre seg hvorfor ikke `datoUfor` er relevant og hvordan det kan være forskjell på `datoUfor` og `virkDato`.
 Mest sannsynlig går brukeren da på en annen ytelse (f.eks. AAP) mellom 2022-02-01 og 2022-09-01 gitt eksempelsvar over.

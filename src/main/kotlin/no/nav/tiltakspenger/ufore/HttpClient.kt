@@ -12,8 +12,7 @@ import io.ktor.serialization.jackson.*
 import mu.KotlinLogging
 
 val LOG = KotlinLogging.logger {}
-fun httpClientCIO(config: CIOEngineConfig.() -> Unit = {}) =
-    HttpClient(CIO) { engine(config) }.medDefaultConfig()
+fun httpClientCIO(config: CIOEngineConfig.() -> Unit = {}) = HttpClient(CIO) { engine(config) }.medDefaultConfig()
 
 fun httpClientMedProxy() = httpClientCIO {
     Configuration.httpProxy()?.let {
