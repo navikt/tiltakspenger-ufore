@@ -30,18 +30,18 @@ En utviklers tolkning, med bistand fra fagkyndig jurist.
 Gyldig forespørsel til Pesys (fnr settes som en header):
 
 ```
-http://<pesysURL>/harUforegrad?fom=2022-01-01&tom=2022-12-31&uforeTyper=UFORE&uforeTyper=UF_M_YRKE
+http://pesysURL/harUforegrad?fom=2022-01-01&tom=2022-12-31&uforeTyper=UFORE&uforeTyper=UF_M_YRKE
 ```
 
-Pesys svarer
+Pesys svarer fra [SakController](https://github.com/navikt/pesys/blob/main/pen-app/src/main/kotlin/no/nav/provider/pensjon/api/sak/SakController.kt):
 
 - 200 dersom fnr finnes i Pesys. Vi svarer det Pesys svarer
 - 400 ved Bad Request som f.eks. ugyldig fnr eller dato. Vi kaster Exception
 - 404 dersom fnr ikke finnes i Pesys. Vi svarer `harUforegrad=false`
 - 5xx og andre feilkoder. Vi kaster Exception
 
-Det finnes flere `uforeTyper`, men ved å bruke `UFORE` (Uføre) og `UF_M_YRKE` (Uføre m/yrkesskade) vil man treffe de
-periodene med uføregrad som finnes, ifølge Pesys
+Det [finnes flere](https://github.com/navikt/pesys/blob/main/pen/domain/nav-domain-pensjon-pen-java/src/main/java/no/nav/domain/pensjon/kjerne/kodetabeller/UforeTypeCode.java) `uforeTyper`, 
+men ved å bruke `UFORE` (Uføre) og `UF_M_YRKE` (Uføre m/yrkesskade) vil man treffe de periodene med uføregrad som finnes, ifølge Pesys
 
 Eksempel på 200-svar fra Pesys ved gyldig input:
 
