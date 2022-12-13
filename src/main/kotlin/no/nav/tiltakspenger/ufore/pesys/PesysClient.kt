@@ -20,8 +20,7 @@ class PesysClient(private val client: HttpClient, private val getToken: suspend 
             url {
                 parameters.append("fom", fom)
                 parameters.append("tom", tom)
-                parameters.append("uforeTyper", "UFORE")
-                parameters.append("uforeTyper", "UF_M_YRKE")
+                parameters.appendAll("uforeTyper", listOf("UFORE", "UF_M_YRKE"))
             }
         }.body()
     } catch (e: ClientRequestException) {

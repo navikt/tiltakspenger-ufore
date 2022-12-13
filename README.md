@@ -30,7 +30,7 @@ En utviklers tolkning, med bistand fra fagkyndig jurist.
 Gyldig forespørsel til Pesys (fnr settes som en header):
 
 ```
-http://pesysURL/harUforegrad?fom=2022-01-01&tom=2022-12-31&uforeTyper=UFORE&uforeTyper=UF_M_YRKE
+http://pesysURL/harUforegrad?fom=2022-01-01&tom=2022-12-31&uforeTyper=UFORE,UF_M_YRKE
 ```
 
 Pesys svarer fra [SakController](https://github.com/navikt/pesys/blob/main/pen-app/src/main/kotlin/no/nav/provider/pensjon/api/sak/SakController.kt):
