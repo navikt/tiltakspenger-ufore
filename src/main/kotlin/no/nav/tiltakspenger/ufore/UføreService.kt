@@ -45,6 +45,7 @@ class UføreService(rapidsConnection: RapidsConnection, private val pesysClient:
                 secureLog.info { response }
                 packet["@løsning"] = mapOf(
                     "harUforegrad" to response.harUforegrad,
+                    "datoUfor" to response.datoUfor,
                     "virkDato" to response.virkDato
                 )
                 loggVedUtgang(packet)

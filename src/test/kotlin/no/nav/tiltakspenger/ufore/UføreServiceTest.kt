@@ -6,6 +6,7 @@ import no.nav.helse.rapids_rivers.asLocalDate
 import no.nav.helse.rapids_rivers.testsupport.TestRapid
 import no.nav.tiltakspenger.ufore.pesys.PesysClient
 import no.nav.tiltakspenger.ufore.pesys.UføreResponse
+import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -13,6 +14,8 @@ import java.time.LocalDate
 
 internal class UføreServiceTest {
     private val ident = "42"
+
+    @Language("JSON")
     private val behov = """
             {
               "@behov": [
@@ -51,6 +54,7 @@ internal class UføreServiceTest {
             val løsning = this.message(0)["@løsning"]
             assertEquals(1, size)
             assertTrue(løsning["harUforegrad"].asBoolean())
+            assertEquals(datoUfor, løsning["datoUfor"].asLocalDate())
             assertEquals(virkDato, løsning["virkDato"].asLocalDate())
         }
     }
