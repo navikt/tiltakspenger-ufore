@@ -64,7 +64,7 @@ internal class PesysClientTest {
     fun `Pesys svarer 400 Bad Request og det kastes exception`() {
         val mockEngine = MockEngine {
             respond(
-                content = "Fikk 404 fra Pesys. Sjekk securelog for detaljer",
+                content = "Fikk 400 fra Pesys",
                 status = HttpStatusCode.BadRequest,
                 headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
             )
