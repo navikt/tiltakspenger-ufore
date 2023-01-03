@@ -10,6 +10,10 @@ import java.time.LocalDate
 
 class PesysClient(private val client: HttpClient, private val getToken: suspend () -> String) {
     private val config = Configuration.PesysConfig()
+
+    // Her kan det sikkert være fristende å gjøre om fom og tom til LocalDate, men jeg tenker at det ikke er nødvendig
+    // De datoene kommer inn som String via R&R-meldingen, og gjøres igjen om til String før de sendes videre til Pesys
+    // Validering av format foretas derfor flere steder allerede
     suspend fun hentUføre(ident: String, fom: String, tom: String, behovId: String): UføreResponse = try {
         client.get(urlString = config.pesysUføreUrl) {
             bearerAuth(getToken())
