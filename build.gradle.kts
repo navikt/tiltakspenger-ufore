@@ -7,7 +7,7 @@ val kotlinxCoroutinesVersion = "1.6.4"
 plugins {
     application
     kotlin("jvm") version "1.8.0"
-    id("com.diffplug.spotless") version "5.0.0"
+    id("com.diffplug.spotless") version "6.13.0"
     id("ca.cutterslade.analyze") version "1.9.0"
 }
 
