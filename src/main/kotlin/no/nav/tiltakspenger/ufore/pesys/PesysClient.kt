@@ -10,8 +10,8 @@ import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import no.nav.tiltakspenger.libs.ufore.UføregradDTO
 import no.nav.tiltakspenger.ufore.Configuration
-import java.time.LocalDate
 
 class PesysClient(private val client: HttpClient, private val getToken: suspend () -> String) {
     private val config = Configuration.PesysConfig()
@@ -19,7 +19,7 @@ class PesysClient(private val client: HttpClient, private val getToken: suspend 
     // Her kan det sikkert være fristende å gjøre om fom og tom til LocalDate, men jeg tenker at det ikke er nødvendig
     // De datoene kommer inn som String via R&R-meldingen, og gjøres igjen om til String før de sendes videre til Pesys
     // Validering av format foretas derfor flere steder allerede
-    suspend fun hentUføre(ident: String, fom: String, tom: String, behovId: String): UføreResponse = try {
+    suspend fun hentUføre(ident: String, fom: String, tom: String, behovId: String): UføregradDTO = try {
         client.get(urlString = config.pesysUføreUrl) {
             bearerAuth(getToken())
             contentType(ContentType.Application.Json)
@@ -34,9 +34,7 @@ class PesysClient(private val client: HttpClient, private val getToken: suspend 
         }.body()
     } catch (e: ClientRequestException) {
         if (e.response.status == HttpStatusCode.NotFound) {
-            UføreResponse(false, null, null)
+            UføregradDTO(false, null, null)
         } else throw (e)
     }
 }
-
-data class UføreResponse(val harUforegrad: Boolean, val datoUfor: LocalDate?, val virkDato: LocalDate?)

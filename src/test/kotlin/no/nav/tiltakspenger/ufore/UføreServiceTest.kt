@@ -2,14 +2,14 @@ package no.nav.tiltakspenger.ufore
 
 import io.mockk.coEvery
 import io.mockk.mockk
-import no.nav.helse.rapids_rivers.asLocalDate
 import no.nav.helse.rapids_rivers.testsupport.TestRapid
+import no.nav.tiltakspenger.libs.ufore.UføregradDTO
 import no.nav.tiltakspenger.ufore.pesys.PesysClient
-import no.nav.tiltakspenger.ufore.pesys.UføreResponse
 import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.skyscreamer.jsonassert.JSONAssert
+import org.skyscreamer.jsonassert.JSONCompareMode
 import java.time.LocalDate
 
 internal class UføreServiceTest {
@@ -47,15 +47,32 @@ internal class UføreServiceTest {
         val pesysClient = mockk<PesysClient>()
         val datoUfor = LocalDate.MIN
         val virkDato = LocalDate.EPOCH
-        coEvery { pesysClient.hentUføre(ident, any(), any(), any()) }.returns(UføreResponse(true, datoUfor, virkDato))
+
+        coEvery { pesysClient.hentUføre(ident, any(), any(), any()) }.returns(UføregradDTO(true, datoUfor, virkDato))
         UføreService(testRapid, pesysClient)
         testRapid.sendTestMessage(behov)
         with(testRapid.inspektør) {
-            val løsning = this.message(0)["@løsning"]
             assertEquals(1, size)
-            assertTrue(løsning["harUforegrad"].asBoolean())
-            assertEquals(datoUfor, løsning["datoUfor"].asLocalDate())
-            assertEquals(virkDato, løsning["virkDato"].asLocalDate())
+
+            JSONAssert.assertEquals(
+                svar,
+                message(0).toPrettyString(), JSONCompareMode.LENIENT,
+            )
         }
     }
+    private val svar = """
+            {
+              "@løsning": {
+                "uføre": {
+                  "uføregrad":
+                    {
+                      "harUforegrad": true,
+                      "datoUfor": "-999999999-01-01",
+                      "virkDato": "1970-01-01"
+                    },
+                  "feil": null
+                }
+              }
+            }
+    """.trimIndent()
 }

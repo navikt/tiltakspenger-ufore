@@ -9,16 +9,23 @@ import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
+import no.nav.tiltakspenger.libs.ufore.UforeResponsDTO
 import no.nav.tiltakspenger.ufore.pesys.PesysClient
 
 class UføreService(rapidsConnection: RapidsConnection, private val pesysClient: PesysClient) : River.PacketListener {
     private val log = KotlinLogging.logger {}
     private val secureLog = KotlinLogging.logger("tjenestekall")
 
+    companion object {
+        internal object BEHOV {
+            const val UFØRE_YTELSER = "uføre"
+        }
+    }
+
     init {
         River(rapidsConnection).apply {
             validate {
-                it.demandAllOrAny("@behov", listOf("uføre"))
+                it.demandAllOrAny("@behov", listOf(BEHOV.UFØRE_YTELSER))
                 it.forbid("@løsning")
                 it.requireKey("@id", "@behovId")
                 it.requireKey("ident")
@@ -40,13 +47,15 @@ class UføreService(rapidsConnection: RapidsConnection, private val pesysClient:
                 secureLog.debug { "mottok ident $ident" }
                 val fom = packet["fom"].asText()
                 val tom = packet["tom"].asText()
-                val response = runBlocking(MDCContext()) { pesysClient.hentUføre(ident, fom, tom, behovId) }
+                val uføregrad = runBlocking(MDCContext()) { pesysClient.hentUføre(ident, fom, tom, behovId) }
                 log.info { "Fikk svar fra Pesys. Sjekk securelog for detaljer" }
-                secureLog.info { response }
+                secureLog.info { uføregrad }
+                val respons = UforeResponsDTO(
+                    uføregrad = uføregrad,
+                    feil = null,
+                )
                 packet["@løsning"] = mapOf(
-                    "harUforegrad" to response.harUforegrad,
-                    "datoUfor" to response.datoUfor,
-                    "virkDato" to response.virkDato
+                    BEHOV.UFØRE_YTELSER to respons,
                 )
                 loggVedUtgang(packet)
                 context.publish(ident, packet.toJson())
