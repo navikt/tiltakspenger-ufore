@@ -27,13 +27,13 @@ internal class PesysClientTest {
             respond(
                 content = """{"harUforegrad":true,"datoUfor":"2022-02-01","virkDato":"2022-09-01"}""".trimMargin(),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = httpClientGeneric(mockEngine)
         val pesysClient = PesysClient(client) { "a token to be used for tests" }
         runTest {
-            val response = pesysClient.hentUføre("ident", "fom", "tom", "behovId")
+            val response = pesysClient.hentUføre("ident", LocalDate.EPOCH, LocalDate.of(9999, 12, 31), "behovId")
             assertTrue(response.harUforegrad)
             assertEquals(LocalDate.of(2022, Month.FEBRUARY, 1), response.datoUfor)
             assertEquals(LocalDate.of(2022, Month.SEPTEMBER, 1), response.virkDato)
@@ -47,13 +47,13 @@ internal class PesysClientTest {
             respond(
                 content = "Personen fantes ikke i Pesys og vi setter uføregrad=false",
                 status = HttpStatusCode.NotFound,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = httpClientGeneric(mockEngine)
         val pesysClient = PesysClient(client) { "a token to be used for tests" }
         runTest {
-            val response = pesysClient.hentUføre("ident", "fom", "tom", "behovId")
+            val response = pesysClient.hentUføre("ident", LocalDate.EPOCH, LocalDate.of(9999, 12, 31), "behovId")
             assertFalse(response.harUforegrad)
             assertNull(response.datoUfor)
             assertNull(response.virkDato)
@@ -67,13 +67,13 @@ internal class PesysClientTest {
             respond(
                 content = "Fikk 400 fra Pesys",
                 status = HttpStatusCode.BadRequest,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = httpClientGeneric(mockEngine)
         val pesysClient = PesysClient(client) { "a token to be used for tests" }
         assertThrows(ClientRequestException::class.java) {
-            runTest { pesysClient.hentUføre("ident", "fom", "tom", "behovId") }
+            runTest { pesysClient.hentUføre("ident", LocalDate.EPOCH, LocalDate.of(9999, 12, 31), "behovId") }
         }
     }
 }
