@@ -1,12 +1,5 @@
 package no.nav.tiltakspenger.ufore
 
-import com.fasterxml.jackson.core.util.DefaultIndenter
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
@@ -28,18 +21,6 @@ class UføreService(rapidsConnection: RapidsConnection, private val pesysClient:
         internal object BEHOV {
             const val UFØRE_YTELSER = "uføre"
         }
-
-        val objectmapper: ObjectMapper = ObjectMapper()
-            .registerModule(KotlinModule.Builder().build())
-            .registerModule(JavaTimeModule())
-            .setDefaultPrettyPrinter(
-                DefaultPrettyPrinter().apply {
-                    indentArraysWith(DefaultPrettyPrinter.FixedSpaceIndenter.instance)
-                    indentObjectsWith(DefaultIndenter("  ", "\n"))
-                },
-            )
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
     }
 
     init {
@@ -69,7 +50,7 @@ class UføreService(rapidsConnection: RapidsConnection, private val pesysClient:
                 val tom: String = packet["tom"].asText("9999-12-31")
 
                 val fomFixed = try {
-                    val tempFom: LocalDate = objectmapper.readValue(fom, LocalDate::class.java)
+                    val tempFom: LocalDate = LocalDate.parse(fom)
                     if (tempFom == LocalDate.MIN) {
                         LocalDate.EPOCH
                     } else {
@@ -81,7 +62,7 @@ class UføreService(rapidsConnection: RapidsConnection, private val pesysClient:
                 }
 
                 val tomFixed = try {
-                    val tempTom: LocalDate = objectmapper.readValue(tom, LocalDate::class.java)
+                    val tempTom: LocalDate = LocalDate.parse(tom)
                     if (tempTom == LocalDate.MAX) {
                         LocalDate.of(9999, 12, 31)
                     } else {
