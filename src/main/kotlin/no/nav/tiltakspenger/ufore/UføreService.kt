@@ -9,6 +9,7 @@ import no.nav.helse.rapids_rivers.JsonMessage
 import no.nav.helse.rapids_rivers.MessageContext
 import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.helse.rapids_rivers.River
+import no.nav.tiltakspenger.libs.ufore.Feilmelding
 import no.nav.tiltakspenger.libs.ufore.UforeResponsDTO
 import no.nav.tiltakspenger.ufore.pesys.PesysClient
 import java.time.LocalDate
@@ -73,13 +74,23 @@ class UføreService(rapidsConnection: RapidsConnection, private val pesysClient:
                     LocalDate.of(9999, 12, 31)
                 }
 
-                val uføregrad = runBlocking(MDCContext()) { pesysClient.hentUføre(ident, fomFixed, tomFixed, behovId) }
-                log.info { "Fikk svar fra Pesys. Sjekk securelog for detaljer" }
-                secureLog.info { uføregrad }
-                val respons = UforeResponsDTO(
-                    uføregrad = uføregrad,
-                    feil = null,
-                )
+                val respons = if (ident.equals("22900497588") or ident.equals("24910596609")) {
+                    // disse er feil identer i dev som vi må skippe
+                    secureLog.info { "Vi hopper over $ident fordi at vi har den på listen over de som ikke er gyldige" }
+                    UforeResponsDTO(
+                        uføregrad = null,
+                        feil = Feilmelding.UgyldigIdent,
+                    )
+                } else {
+                    val uføregrad = runBlocking(MDCContext()) { pesysClient.hentUføre(ident, fomFixed, tomFixed, behovId) }
+                    log.info { "Fikk svar fra Pesys. Sjekk securelog for detaljer" }
+                    secureLog.info { uføregrad }
+                    UforeResponsDTO(
+                        uføregrad = uføregrad,
+                        feil = null,
+                    )
+                }
+
                 packet["@løsning"] = mapOf(
                     BEHOV.UFØRE_YTELSER to respons,
                 )
