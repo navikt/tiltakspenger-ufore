@@ -56,7 +56,8 @@ internal class UføreServiceTest {
 
             JSONAssert.assertEquals(
                 svar,
-                message(0).toPrettyString(), JSONCompareMode.LENIENT,
+                message(0).toPrettyString(),
+                JSONCompareMode.LENIENT,
             )
         }
     }

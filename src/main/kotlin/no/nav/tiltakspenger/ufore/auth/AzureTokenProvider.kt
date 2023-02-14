@@ -25,7 +25,7 @@ class AzureTokenProvider(private val httpClient: HttpClient) {
                 append("client_id", config.clientId)
                 append("client_secret", config.clientSecret)
                 append("scope", config.scope)
-            }
+            },
         ).body()
         tokenCache.update(response.accessToken, response.expiresIn.toLong())
         return response.accessToken
@@ -34,6 +34,6 @@ class AzureTokenProvider(private val httpClient: HttpClient) {
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class WellKnown(
         @JsonProperty("token_endpoint")
-        val tokenEndpoint: String
+        val tokenEndpoint: String,
     )
 }

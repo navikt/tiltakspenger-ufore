@@ -12,5 +12,5 @@ data class OAuth2AccessTokenResponse(
     @JsonProperty("ext_expires_in")
     val extExpiresIn: Int,
     @JsonProperty("expires_in")
-    val expiresIn: Int
+    val expiresIn: Int,
 )

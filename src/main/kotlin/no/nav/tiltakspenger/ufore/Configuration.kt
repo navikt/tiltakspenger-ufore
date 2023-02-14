@@ -22,7 +22,7 @@ object Configuration {
         "AZURE_APP_CLIENT_ID" to System.getenv("AZURE_APP_CLIENT_ID"),
         "AZURE_APP_CLIENT_SECRET" to System.getenv("AZURE_APP_CLIENT_SECRET"),
         "AZURE_APP_WELL_KNOWN_URL" to System.getenv("AZURE_APP_WELL_KNOWN_URL"),
-        "HTTP_PROXY" to System.getenv("HTTP_PROXY")
+        "HTTP_PROXY" to System.getenv("HTTP_PROXY"),
     )
     private val defaultProps = ConfigurationMap(rapidsAndRivers + otherDefaultProperties)
     private val localProps = ConfigurationMap(
@@ -30,21 +30,21 @@ object Configuration {
             "application.profile" to Profile.LOCAL.toString(),
             "PESYS_UFØRE_URL" to "",
             "PESYS_SCOPE" to "api://localhost:/.default",
-        )
+        ),
     )
     private val devProps = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.DEV.toString(),
             "PESYS_UFØRE_URL" to "http://pensjon-pen-q1.teampensjon/pen/springapi/sak/harUforegrad",
             "PESYS_SCOPE" to "api://dev-fss.teampensjon.pensjon-pen-q1/.default",
-        )
+        ),
     )
     private val prodProps = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.PROD.toString(),
             "PESYS_UFØRE_URL" to "http://pensjon-pen.pensjondeployer/pen/springapi/sak/harUforegrad",
             "PESYS_SCOPE" to "api://prod-fss.pensjondeployer.pensjon-pen/.default",
-        )
+        ),
     )
 
     private fun config() = when (System.getenv("NAIS_CLUSTER_NAME") ?: System.getProperty("NAIS_CLUSTER_NAME")) {
@@ -57,7 +57,7 @@ object Configuration {
         val scope: String = config()[Key("PESYS_SCOPE", stringType)],
         val clientId: String = config()[Key("AZURE_APP_CLIENT_ID", stringType)],
         val clientSecret: String = config()[Key("AZURE_APP_CLIENT_SECRET", stringType)],
-        val wellknownUrl: String = config()[Key("AZURE_APP_WELL_KNOWN_URL", stringType)]
+        val wellknownUrl: String = config()[Key("AZURE_APP_WELL_KNOWN_URL", stringType)],
     )
 
     @JvmInline

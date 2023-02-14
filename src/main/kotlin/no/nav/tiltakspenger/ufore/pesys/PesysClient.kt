@@ -38,6 +38,8 @@ class PesysClient(private val client: HttpClient, private val getToken: suspend 
     } catch (e: ClientRequestException) {
         if (e.response.status == HttpStatusCode.NotFound) {
             UføregradDTO(false, null, null)
-        } else throw (e)
+        } else {
+            throw (e)
+        }
     }
 }
