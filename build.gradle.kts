@@ -7,7 +7,7 @@ val felleslibVersion = "0.0.23"
 
 plugins {
     application
-    kotlin("jvm") version "1.8.0"
+    kotlin("jvm") version "1.8.10"
     id("com.diffplug.spotless") version "6.15.0"
     id("ca.cutterslade.analyze") version "1.9.0"
 }
