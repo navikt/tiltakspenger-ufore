@@ -27,7 +27,7 @@ dependencies {
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("org.jetbrains:annotations:24.0.0")
     implementation("com.github.navikt.tiltakspenger-libs:ufore-dtos:$felleslibVersion")
-    implementation("com.github.navikt:rapids-and-rivers:2022122311551671792919.2bdd972d7bdb")
+    implementation("com.github.navikt:rapids-and-rivers:2023022210271677058038.ec07e03eceb6")
     implementation("com.natpryce:konfig:1.6.10.0")
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
