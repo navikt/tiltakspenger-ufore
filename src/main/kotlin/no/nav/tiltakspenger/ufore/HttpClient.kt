@@ -11,11 +11,13 @@ import io.ktor.client.engine.cio.CIOEngineConfig
 import io.ktor.client.engine.http
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.jackson.jackson
 import mu.KotlinLogging
 
 val LOG = KotlinLogging.logger {}
+private val SECURELOG = KotlinLogging.logger("tjenestekall")
 fun httpClientCIO(config: CIOEngineConfig.() -> Unit = {}) = HttpClient(CIO) { engine(config) }.medDefaultConfig()
 
 fun httpClientMedProxy() = httpClientCIO {
@@ -36,7 +38,13 @@ private fun HttpClient.medDefaultConfig() = this.config {
         }
     }
     expectSuccess = true
-    install(Logging) {
-        level = LogLevel.INFO
+    this.install(Logging) {
+        logger = object : Logger {
+            override fun log(message: String) {
+                LOG.info("HttpClient detaljer logget til securelog")
+                SECURELOG.info(message)
+            }
+        }
+        level = LogLevel.ALL
     }
 }
