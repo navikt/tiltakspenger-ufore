@@ -2,7 +2,7 @@ val javaVersion = JavaVersion.VERSION_17
 val mockkVersion = "1.13.5"
 val ktorVersion = "2.3.0"
 val jacksonVersion = "2.15.0"
-val kotlinxCoroutinesVersion = "1.6.4"
+val kotlinxCoroutinesVersion = "1.7.0"
 val felleslibVersion = "0.0.32"
 
 plugins {
