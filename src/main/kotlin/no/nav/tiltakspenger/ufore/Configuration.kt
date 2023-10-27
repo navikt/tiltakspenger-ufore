@@ -35,8 +35,8 @@ object Configuration {
     private val devProps = ConfigurationMap(
         mapOf(
             "application.profile" to Profile.DEV.toString(),
-            "PESYS_UFØRE_URL" to "http://pensjon-pen-q2.teampensjon/pen/springapi/sak/harUforegrad",
-            "PESYS_SCOPE" to "api://dev-fss.teampensjon.pensjon-pen-q2/.default",
+            "PESYS_UFØRE_URL" to "http://pensjon-pen-q2.pensjon-q2/pen/springapi/sak/harUforegrad",
+            "PESYS_SCOPE" to "api://dev-fss.pensjon-q2.pensjon-pen-q2/.default",
         ),
     )
     private val prodProps = ConfigurationMap(
